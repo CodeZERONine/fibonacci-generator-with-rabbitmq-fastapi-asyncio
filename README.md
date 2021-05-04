@@ -13,7 +13,7 @@ Second one is consuming messages from RabbitMQ and inserting numbers to database
 - Databases
 - AIORMQ
 
-#### To start services user run:
+#### To start services run:
 ```
 docker-compose up -d 
 ```
