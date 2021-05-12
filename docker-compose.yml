@@ -35,7 +35,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_USER=rabbitmq
       - RABBITMQ_PASSWORD=rabbitmq
-      - QUEUE_NAME=fibo
+      - EXCHANGE_NAME=fibo
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -50,7 +50,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_USER=rabbitmq
       - RABBITMQ_PASSWORD=rabbitmq
-      - QUEUE_NAME=fibo
+      - EXCHANGE_NAME=fibo
       - POSTGRES_HOST=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
