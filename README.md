@@ -7,6 +7,7 @@ Second one is consuming messages from RabbitMQ and inserting numbers to database
 - FastAPI
 - RabbitQM
 - Asyncio
+- PostgreSQL
 - Docker
 - Docker-compose
 - SQLAlchemy
