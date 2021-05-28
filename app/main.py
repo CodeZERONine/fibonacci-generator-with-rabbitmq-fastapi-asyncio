@@ -9,25 +9,25 @@ import os
 
 app = FastAPI()
 
-exchangeName = os.environ.get("EXCHANGE_NAME")
-rabbitmqHost = os.environ.get("RABBITMQ_HOST")
-rabbitmqUser = os.environ.get("RABBITMQ_USER")
-rabbitmqPassword = os.environ.get("RABBITMQ_PASSWORD")
+exchange_name = os.environ.get("EXCHANGE_NAME")
+rabbitmq_host = os.environ.get("RABBITMQ_HOST")
+rabbitmq_user = os.environ.get("RABBITMQ_USER")
+rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
 
 async def push_to_rabbit(number: int):
     request = RabbitBody(number)
 
-    connection = await aiormq.connect("amqp://{}:{}@{}/".format(rabbitmqUser, rabbitmqPassword, rabbitmqHost))
+    connection = await aiormq.connect("amqp://{}:{}@{}/".format(rabbitmq_user, rabbitmq_password, rabbitmq_host))
     channel = await connection.channel()
 
     await channel.exchange_declare(
-        exchange=exchangeName, exchange_type='direct'
+        exchange=exchange_name, exchange_type='direct'
     )
 
     await channel.basic_publish(
         request.encode(), 
         routing_key='fibonacci', 
-        exchange=exchangeName,
+        exchange=exchange_name,
         properties=aiormq.spec.Basic.Properties(
             delivery_mode=2
         )

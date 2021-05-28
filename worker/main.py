@@ -10,18 +10,18 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column, Integer
 from databases import Database
 
-exchangeName = os.environ.get("EXCHANGE_NAME")
-rabbitmqHost = os.environ.get("RABBITMQ_HOST")
-rabbitmqUser = os.environ.get("RABBITMQ_USER")
-rabbitmqPassword = os.environ.get("RABBITMQ_PASSWORD")
+exchange_name = os.environ.get("EXCHANGE_NAME")
+rabbitmq_host = os.environ.get("RABBITMQ_HOST")
+rabbitmq_user = os.environ.get("RABBITMQ_USER")
+rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
 
-postgresHost = os.environ.get("POSTGRES_HOST")
-postgresPort = os.environ.get("POSTGRES_PORT")
-postgresDatabase = os.environ.get("POSTGRES_DB")
-postgresUser = os.environ.get("POSTGRES_USER")
-postgresPassword = os.environ.get("POSTGRES_PASSWORD")
+postgres_host = os.environ.get("POSTGRES_HOST")
+postgres_port = os.environ.get("POSTGRES_PORT")
+postgres_database = os.environ.get("POSTGRES_DB")
+postgres_user = os.environ.get("POSTGRES_USER")
+postgres_password = os.environ.get("POSTGRES_PASSWORD")
 
-DATABASE_URL = 'postgresql://{}:{}@{}:{}/{}'.format(postgresUser, postgresPassword, postgresHost, postgresPort, postgresDatabase)
+DATABASE_URL = 'postgresql://{}:{}@{}:{}/{}'.format(postgres_user, postgres_password, postgres_host, postgres_port, postgres_database)
 
 engine = create_engine(DATABASE_URL)
 database = Database(DATABASE_URL)
@@ -47,17 +47,17 @@ async def insertFibo(message: DeliveredMessage):
     )
 
 async def consume():
-    connection = await aiormq.connect("amqp://{}:{}@{}/".format(rabbitmqUser, rabbitmqPassword, rabbitmqHost))
+    connection = await aiormq.connect("amqp://{}:{}@{}/".format(rabbitmq_user, rabbitmq_password, rabbitmq_host))
     channel = await connection.channel()
     
     await channel.basic_qos(prefetch_count=1)
 
     await channel.exchange_declare(
-        exchange=exchangeName, exchange_type='direct'
+        exchange=exchange_name, exchange_type='direct'
     )
     
     declare = await channel.queue_declare(durable=True, auto_delete=True)
-    await channel.queue_bind(declare.queue, exchangeName, routing_key='fibonacci')
+    await channel.queue_bind(declare.queue, exchange_name, routing_key='fibonacci')
 
     await channel.basic_consume(declare.queue, insertFibo)
 
